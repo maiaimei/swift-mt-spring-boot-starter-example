@@ -67,6 +67,7 @@ public class MTXxxTest extends BaseTest {
         System.out.println("*******************************************");
         // 方法二
         MT940 mt = MT940.parse(mt940);
+        System.out.println(mt.message());
         for (Field61 tx : mt.getField61()) {
             System.out.println("Amount: " + tx.getComponent(Field61.AMOUNT));
             System.out.println("Transaction Type: " + tx.getComponent(Field61.TRANSACTION_TYPE));
@@ -84,7 +85,7 @@ public class MTXxxTest extends BaseTest {
      */
     @Test
     void testSequences() {
-        MT798 mt798 = readFileAsMT798("MT798_760.txt");
+        MT798 mt798 = readFileAsMT798("validation/mt7xx/MT798_760.txt");
         SwiftTagListBlock block = mt798.getSubMessage().getBlock4();
         Map<String, SwiftTagListBlock> map = SwiftMessageUtils.splitByField15(block);
         for (Map.Entry<String, SwiftTagListBlock> entry : map.entrySet()) {

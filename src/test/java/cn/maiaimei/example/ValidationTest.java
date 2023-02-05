@@ -16,8 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.util.CollectionUtils;
 
+import java.lang.reflect.Method;
 import java.util.List;
-import java.util.Map;
 
 @Slf4j
 @SpringBootTest
@@ -30,7 +30,7 @@ public class ValidationTest extends BaseTest {
 
     @Test
     void testValidateMT798() {
-        MT798 mt798 = readFileAsMT798("MT798_784.txt");
+        MT798 mt798 = readFileAsMT798("validation/mt7xx/MT798_784.txt");
         ValidationResult result = validationEngine.validate(mt798);
         if (!CollectionUtils.isEmpty(result.getErrorMessages())) {
             System.out.println("Validate error");
@@ -44,14 +44,34 @@ public class ValidationTest extends BaseTest {
 
     @SneakyThrows
     @Test
+    void testValidateMT() {
+        //MT798 mt = readFileAsMT798("validation/mt7xx/MT798_784.txt");
+        String message = readFileAsString("validation/mt9xx/MT940.txt");
+        ValidationResult result = genericValidationEngine.validate(message, "940");
+        if (!CollectionUtils.isEmpty(result.getErrorMessages())) {
+            System.out.println("Validate error");
+            for (String errorMessage : result.getErrorMessages()) {
+                System.out.println(errorMessage);
+            }
+        } else {
+            System.out.println("Validate success");
+        }
+    }
+
+    @SneakyThrows
+    @Test
     void testSwiftMessageParser() {
-        String message = readFileAsString("MT798_760.txt");
+        String message = readFileAsString("validation/mt7xx/MT798_760.txt");
         SwiftParser parser = new SwiftParser(message);
         SwiftMessage swiftMessage = parser.message();
         String type = swiftMessage.getType(); // Message Type?
         SwiftBlock4 block4 = swiftMessage.getBlock4();
         List<Tag> allTags = block4.getTags();
-        Map<String, List<SwiftTagListBlock>> sequenceBlockMap = genericValidationEngine.getSequenceBlockMap("760", block4);
+        Class<? extends GenericValidationEngine> clazz = genericValidationEngine.getClass();
+        Method method = clazz.getDeclaredMethod("getSequenceBlockMap", String.class, SwiftTagListBlock.class);
+        method.setAccessible(true);
+        Object sequenceBlockMap = method.invoke(genericValidationEngine, "760", block4);
+        method.setAccessible(false);
         System.out.println();
     }
 }
