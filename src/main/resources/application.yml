@@ -1,3 +1,3 @@
 swift:
-  mt:
-    mt7xx-validation-config-locations: "classpath*:validation/mt7xx/*.json"
+  validation:
+    enabled-mt7xx: true
