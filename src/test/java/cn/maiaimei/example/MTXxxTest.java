@@ -85,7 +85,7 @@ public class MTXxxTest extends BaseTest {
      */
     @Test
     void testSequences() {
-        MT798 mt798 = readFileAsMT798("validation/mt7xx/MT798_760.txt");
+        MT798 mt798 = readFileAsMT798("validation/mt7xx/MT784_760.txt");
         SwiftTagListBlock block = mt798.getSubMessage().getBlock4();
         Map<String, SwiftTagListBlock> map = SwiftMessageUtils.splitByField15(block);
         for (Map.Entry<String, SwiftTagListBlock> entry : map.entrySet()) {

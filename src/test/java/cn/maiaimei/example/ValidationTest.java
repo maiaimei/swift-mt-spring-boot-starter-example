@@ -30,7 +30,7 @@ public class ValidationTest extends BaseTest {
 
     @Test
     void testValidateMT798() {
-        MT798 mt798 = readFileAsMT798("validation/mt7xx/MT798_784.txt");
+        MT798 mt798 = readFileAsMT798("validation/mt7xx/MT784_761.txt");
         ValidationResult result = validationEngine.validate(mt798);
         if (!CollectionUtils.isEmpty(result.getErrorMessages())) {
             System.out.println("Validate error");
@@ -45,7 +45,7 @@ public class ValidationTest extends BaseTest {
     @SneakyThrows
     @Test
     void testValidateMT() {
-        //MT798 mt = readFileAsMT798("validation/mt7xx/MT798_784.txt");
+        //MT798 mt = readFileAsMT798("validation/mt7xx/MT784_784.txt");
         String message = readFileAsString("validation/mt9xx/MT940.txt");
         ValidationResult result = genericValidationEngine.validate(message, "940");
         if (!CollectionUtils.isEmpty(result.getErrorMessages())) {
@@ -61,7 +61,7 @@ public class ValidationTest extends BaseTest {
     @SneakyThrows
     @Test
     void testSwiftMessageParser() {
-        String message = readFileAsString("validation/mt7xx/MT798_760.txt");
+        String message = readFileAsString("validation/mt7xx/MT784_760.txt");
         SwiftParser parser = new SwiftParser(message);
         SwiftMessage swiftMessage = parser.message();
         String type = swiftMessage.getType(); // Message Type?
