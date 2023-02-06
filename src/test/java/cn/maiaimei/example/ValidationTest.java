@@ -30,7 +30,7 @@ public class ValidationTest extends BaseTest {
 
     @Test
     void testValidateMT798() {
-        MT798 mt798 = readFileAsMT798("validation/mt7xx/MT784_784.txt");
+        MT798 mt798 = readFileAsMT798("validation/mt7xx/MT784_761.txt");
         ValidationResult result = validationEngine.validate(mt798);
         if (!CollectionUtils.isEmpty(result.getErrorMessages())) {
             System.out.println("Validate error");

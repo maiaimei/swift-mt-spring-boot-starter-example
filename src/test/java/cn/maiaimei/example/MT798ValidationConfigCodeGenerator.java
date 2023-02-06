@@ -25,6 +25,7 @@ public class MT798ValidationConfigCodeGenerator extends BaseTest {
         List<Tag> tags = block.getTags();
         StringBuilder builder = new StringBuilder();
         builder.append("{");
+        builder.append("\"indexMessageType\":\"\",");
         builder.append("\"messageType\":\"").append(mt798.getField12().getValue()).append("\",");
         builder.append("\"fields\":[");
         for (int i = 0; i < tags.size(); i++) {
@@ -134,7 +135,7 @@ public class MT798ValidationConfigCodeGenerator extends BaseTest {
         List<String> componentLabels = field.getComponentLabels();
         for (int i = 0; i < componentLabels.size(); i++) {
             builder.append("{");
-            builder.append("\"number\":").append(i + 1).append(",");
+            builder.append("\"index\":").append(i + 1).append(",");
             builder.append("\"label\":\"").append(componentLabels.get(i)).append("\",");
             builder.append("\"format\":\"\",");
             builder.append("\"isMandatory\":false");
