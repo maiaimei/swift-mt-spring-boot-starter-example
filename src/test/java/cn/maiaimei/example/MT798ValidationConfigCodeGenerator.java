@@ -11,7 +11,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-public class ValidationConfigCodeGenerator extends BaseTest {
+public class MT798ValidationConfigCodeGenerator extends BaseTest {
 
     @Test
     public void testGenerateCode() {
