@@ -1,5 +1,6 @@
 package cn.maiaimei.example;
 
+import cn.maiaimei.framework.swift.config.SwiftMTAutoConfiguration;
 import cn.maiaimei.framework.swift.validation.ValidationEngine;
 import cn.maiaimei.framework.swift.validation.ValidationResult;
 import cn.maiaimei.framework.swift.validation.engine.GenericValidationEngine;
@@ -12,15 +13,18 @@ import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.CollectionUtils;
 
 import java.lang.reflect.Method;
 import java.util.List;
 
 @Slf4j
-@SpringBootTest
+@ExtendWith({SpringExtension.class})
+@ContextConfiguration(classes = {SwiftMTAutoConfiguration.class})
 public class ValidationTest extends BaseTest {
     @Autowired
     ValidationEngine validationEngine;

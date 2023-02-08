@@ -1,6 +1,6 @@
 package cn.maiaimei.example;
 
-import cn.maiaimei.framework.swift.annotation.SwiftTag;
+import cn.maiaimei.framework.swift.annotation.SwiftMTTag;
 import cn.maiaimei.framework.swift.model.BaseMessage;
 import cn.maiaimei.framework.swift.model.mt7xx.BaseMT798Message;
 import cn.maiaimei.framework.swift.model.mt7xx.MT784Transaction;
@@ -43,13 +43,13 @@ public class ConverterTest extends BaseTest {
         Class<? extends BaseMessage> clazz = message.getClass();
         List<Field> declaredFields = getDeclaredFields(clazz);
         for (Field declaredField : declaredFields) {
-            SwiftTag swiftTag = declaredField.getAnnotation(SwiftTag.class);
-            com.prowidesoftware.swift.model.field.Field field = block.getFieldByName(swiftTag.value());
+            SwiftMTTag swiftMTTag = declaredField.getAnnotation(SwiftMTTag.class);
+            com.prowidesoftware.swift.model.field.Field field = block.getFieldByName(swiftMTTag.value());
             if (field == null) {
                 continue;
             }
             declaredField.setAccessible(Boolean.TRUE);
-            declaredField.set(message, swiftTag.index() == -1 ? field.getValue() : field.getComponent(swiftTag.index()));
+            declaredField.set(message, swiftMTTag.index() == -1 ? field.getValue() : field.getComponent(swiftMTTag.index()));
             declaredField.setAccessible(Boolean.FALSE);
         }
     }
