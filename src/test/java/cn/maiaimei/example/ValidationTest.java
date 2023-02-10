@@ -1,9 +1,9 @@
 package cn.maiaimei.example;
 
 import cn.maiaimei.framework.swift.config.SwiftMTAutoConfiguration;
-import cn.maiaimei.framework.swift.validation.ValidationEngine;
 import cn.maiaimei.framework.swift.validation.ValidationResult;
 import cn.maiaimei.framework.swift.validation.engine.GenericValidationEngine;
+import cn.maiaimei.framework.swift.validation.engine.MT798ValidationEngine;
 import com.prowidesoftware.swift.io.parser.SwiftParser;
 import com.prowidesoftware.swift.model.SwiftBlock4;
 import com.prowidesoftware.swift.model.SwiftMessage;
@@ -27,15 +27,15 @@ import java.util.List;
 @ContextConfiguration(classes = {SwiftMTAutoConfiguration.class})
 public class ValidationTest extends BaseTest {
     @Autowired
-    ValidationEngine validationEngine;
+    MT798ValidationEngine mt798ValidationEngine;
 
     @Autowired
     GenericValidationEngine genericValidationEngine;
 
     @Test
     void testValidateMT798() {
-        MT798 mt798 = readFileAsMT798("validation/mt7xx/MT784_761.txt");
-        ValidationResult result = validationEngine.validate(mt798);
+        MT798 mt798 = readFileAsMT798("validation/mt7xx/MT784_784.txt");
+        ValidationResult result = mt798ValidationEngine.validate(mt798);
         if (!CollectionUtils.isEmpty(result.getErrorMessages())) {
             System.out.println("Validate error");
             for (String errorMessage : result.getErrorMessages()) {

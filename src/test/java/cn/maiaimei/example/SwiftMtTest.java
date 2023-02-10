@@ -16,7 +16,7 @@ import org.reflections.Reflections;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class MTXxxTest extends BaseTest {
+public class SwiftMtTest extends BaseTest {
 
     @SneakyThrows
     @Test

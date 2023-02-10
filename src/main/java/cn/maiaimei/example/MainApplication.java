@@ -1,7 +1,6 @@
 package cn.maiaimei.example;
 
 import cn.maiaimei.framework.swift.validation.config.MessageValidationConfig;
-import cn.maiaimei.framework.swift.validation.engine.GenericValidationEngine;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -16,7 +15,5 @@ public class MainApplication {
         for (String beanDefinitionName : beanDefinitionNames) {
             log.info("{} -> {}", beanDefinitionName, applicationContext.getBean(beanDefinitionName));
         }
-        GenericValidationEngine genericValidationEngine = applicationContext.getBean(GenericValidationEngine.class);
-        System.out.println();
     }
 }
