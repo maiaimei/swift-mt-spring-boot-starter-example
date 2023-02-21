@@ -29,8 +29,8 @@ public class ValidationTest extends BaseTest {
 
     @Test
     void testValidateMT798() {
-        MT798 mt798 = readFileAsMT798("mt/mt7xx/MT784_761_02.txt");
-        ValidationResult result = mt798ValidationEngine.validate(mt798, false);
+        MT798 mt798 = readFileAsMT798("mt/mt7xx/MT784_784.txt");
+        ValidationResult result = mt798ValidationEngine.validate(mt798);
         printValidationResult(result);
     }
 

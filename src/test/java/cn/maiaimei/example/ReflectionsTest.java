@@ -53,11 +53,11 @@ public class ReflectionsTest {
             Field field = fieldClass.newInstance();
             String name = field.getName();
             String validatorPattern = field.validatorPattern();
-            boolean b1 = ValidatorUtils.isMatchFixedLengthCharacter(validatorPattern);
-            boolean b2 = ValidatorUtils.isMatchFixedLengthCharacterStartsWithSlash(validatorPattern);
-            boolean b3 = ValidatorUtils.isMatchVariableLengthCharacter(validatorPattern);
-            boolean b4 = ValidatorUtils.isMatchVariableLengthCharacterStartsWithSlash(validatorPattern);
-            boolean b5 = ValidatorUtils.isMatchMultilineSwiftSet(validatorPattern);
+            boolean b1 = ValidatorUtils.isFixedLengthCharacter(validatorPattern);
+            boolean b2 = ValidatorUtils.isFixedLengthCharacterStartsWithSlash(validatorPattern);
+            boolean b3 = ValidatorUtils.isVariableLengthCharacter(validatorPattern);
+            boolean b4 = ValidatorUtils.isVariableLengthCharacterStartsWithSlash(validatorPattern);
+            boolean b5 = ValidatorUtils.isMultilineSwiftSet(validatorPattern);
             boolean b = b1 || b2 || b3 || b4 || b5;
             if (!b && !validatorPatterns.contains(validatorPattern)) {
                 validatorPatterns.add(validatorPattern);
