@@ -1,9 +1,9 @@
 package cn.maiaimei.example;
 
 import cn.maiaimei.framework.swift.config.SwiftAutoConfiguration;
-import cn.maiaimei.framework.swift.validation.config.FieldInfo;
-import cn.maiaimei.framework.swift.validation.config.MessageValidationConfig;
-import cn.maiaimei.framework.swift.validation.config.SequenceInfo;
+import cn.maiaimei.framework.swift.model.mt.config.FieldInfo;
+import cn.maiaimei.framework.swift.model.mt.config.MessageConfig;
+import cn.maiaimei.framework.swift.model.mt.config.SequenceInfo;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,9 +24,9 @@ public class CodeGenerator {
     @Test
     void testGeneratePropertiesByMessageValidationConfig() {
         String beanName = "mt762761ValidationConfig";
-        MessageValidationConfig messageValidationConfig = applicationContext.getBean(beanName, MessageValidationConfig.class);
-        List<FieldInfo> fields = messageValidationConfig.getFields();
-        List<SequenceInfo> sequences = messageValidationConfig.getSequences();
+        MessageConfig messageConfig = applicationContext.getBean(beanName, MessageConfig.class);
+        List<FieldInfo> fields = messageConfig.getFields();
+        List<SequenceInfo> sequences = messageConfig.getSequences();
         generateProperty(fields);
         if (!CollectionUtils.isEmpty(sequences)) {
             for (SequenceInfo sequenceInfo : sequences) {
