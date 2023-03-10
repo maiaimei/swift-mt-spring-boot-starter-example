@@ -1,7 +1,6 @@
 package cn.maiaimei.example;
 
 import cn.maiaimei.framework.swift.annotation.Tag;
-import cn.maiaimei.framework.swift.config.SwiftAutoConfiguration;
 import cn.maiaimei.framework.swift.converter.mt.mt7xx.MT798ToTransactionConverter;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT762Transaction;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Messages;
@@ -14,6 +13,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
@@ -26,7 +26,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = SwiftAutoConfiguration.class)
+@ContextConfiguration(classes = TestConfig.class, initializers = ConfigDataApplicationContextInitializer.class)
 public class ConverterTest extends BaseTest {
 
     @Autowired

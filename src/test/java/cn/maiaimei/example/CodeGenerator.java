@@ -1,6 +1,5 @@
 package cn.maiaimei.example;
 
-import cn.maiaimei.framework.swift.config.SwiftAutoConfiguration;
 import cn.maiaimei.framework.swift.model.mt.config.FieldInfo;
 import cn.maiaimei.framework.swift.model.mt.config.MessageConfig;
 import cn.maiaimei.framework.swift.model.mt.config.SequenceInfo;
@@ -8,6 +7,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
@@ -16,7 +16,7 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = SwiftAutoConfiguration.class)
+@ContextConfiguration(classes = TestConfig.class, initializers = ConfigDataApplicationContextInitializer.class)
 public class CodeGenerator {
     @Autowired
     private ApplicationContext applicationContext;
