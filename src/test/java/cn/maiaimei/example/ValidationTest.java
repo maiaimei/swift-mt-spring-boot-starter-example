@@ -1,8 +1,7 @@
 package cn.maiaimei.example;
 
 import cn.maiaimei.framework.swift.validation.ValidationResult;
-import cn.maiaimei.framework.swift.validation.engine.GenericMTValidationEngine;
-import cn.maiaimei.framework.swift.validation.engine.MT798ValidationEngine;
+import cn.maiaimei.framework.swift.validation.engine.ValidationEngine;
 import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -24,22 +23,19 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 @ContextConfiguration(classes = TestConfig.class, initializers = ConfigDataApplicationContextInitializer.class)
 public class ValidationTest extends BaseTest {
     @Autowired
-    MT798ValidationEngine mt798ValidationEngine;
-
-    @Autowired
-    GenericMTValidationEngine genericMtValidationEngine;
+    ValidationEngine validationEngine;
 
     @Test
     void testValidateMT798() {
         MT798 mt798 = readFileAsMT798("mt/mt7xx/MT784_784.txt");
-        ValidationResult result = mt798ValidationEngine.validate(mt798);
+        ValidationResult result = validationEngine.validate(mt798);
         printValidationResult(result);
     }
 
     @Test
     void testValidateMT9xx() {
         String message = readFileAsString("mt/mt9xx/MT940.txt");
-        ValidationResult result = genericMtValidationEngine.validate(message);
+        ValidationResult result = validationEngine.validate(message);
         printValidationResult(result);
     }
 
