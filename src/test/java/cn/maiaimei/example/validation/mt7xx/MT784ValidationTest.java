@@ -1,15 +1,16 @@
 package cn.maiaimei.example.validation.mt7xx;
 
+import cn.maiaimei.example.validation.ValidationTest;
 import cn.maiaimei.framework.swift.validation.ValidationResult;
 import com.prowidesoftware.swift.model.field.*;
 import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
-class MT784ValidationTest extends MT798ValidationTest {
-    @Override
-    protected String getSubMessageType() {
-        return "784";
+class MT784ValidationTest extends ValidationTest {
+
+    void validateField(String tagName, String invalidValue) {
+        validateField(mockMT798("784"), tagName, invalidValue);
     }
 
     @Test

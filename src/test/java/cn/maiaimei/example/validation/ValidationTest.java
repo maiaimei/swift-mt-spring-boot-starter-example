@@ -4,8 +4,14 @@ import cn.maiaimei.example.BaseTest;
 import cn.maiaimei.example.config.ValidationTestConfig;
 import cn.maiaimei.framework.swift.validation.ValidationResult;
 import cn.maiaimei.framework.swift.validation.engine.ValidationEngine;
+import com.prowidesoftware.swift.model.Tag;
+import com.prowidesoftware.swift.model.field.Field12;
+import com.prowidesoftware.swift.model.field.Field20;
+import com.prowidesoftware.swift.model.field.Field77E;
+import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.RandomStringUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.ConfigDataApplicationContextInitializer;
@@ -31,6 +37,23 @@ public class ValidationTest extends BaseTest {
 
     @Autowired
     protected ValidationEngine validationEngine;
+
+    protected MT798 mockMT798(String subMessageType) {
+        MT798 mt798 = new MT798();
+        mt798.append(new Field20("FGH96372"));
+        mt798.append(new Field12(subMessageType));
+        mt798.append(new Field77E());
+        return mt798;
+    }
+
+    protected void validateField(MT798 mt798, String tagName, String invalidValue) {
+        assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
+        mt798.append(new Tag(tagName, StringUtils.EMPTY));
+        assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
+        mt798.getSwiftMessage().getBlock4().removeTag(tagName);
+        mt798.append(new Tag(tagName, invalidValue));
+        assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
+    }
 
     protected void assertAndPrintResult(ValidationResult result) {
         assertAndPrintResult(result, null);
