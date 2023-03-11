@@ -35,7 +35,7 @@ public class SwiftTest extends BaseTest {
                 "ABC DO BRASIL LTDA\n" +
                 ":86:INVOICE NR. 6000012801 \n" +
                 "ORDPRTY : ABC DO BRASIL LTDA RUA LIBERO BADARO,293-SAO \n" +
-                "PAULO BRAZIL }";
+                "PAULO BRAZIL -}";
         // 方法一
         SwiftParser parser = new SwiftParser(mt940);
         SwiftMessage swiftMessage = parser.message();

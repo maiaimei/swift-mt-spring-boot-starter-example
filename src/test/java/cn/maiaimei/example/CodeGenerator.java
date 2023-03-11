@@ -1,5 +1,6 @@
 package cn.maiaimei.example;
 
+import cn.maiaimei.example.config.TestConfig;
 import cn.maiaimei.framework.swift.model.mt.config.FieldInfo;
 import cn.maiaimei.framework.swift.model.mt.config.MessageConfig;
 import cn.maiaimei.framework.swift.model.mt.config.SequenceInfo;

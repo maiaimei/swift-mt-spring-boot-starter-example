@@ -1,5 +1,7 @@
-package cn.maiaimei.example;
+package cn.maiaimei.example.converter;
 
+import cn.maiaimei.example.BaseTest;
+import cn.maiaimei.example.config.TestConfig;
 import cn.maiaimei.framework.swift.annotation.Tag;
 import cn.maiaimei.framework.swift.converter.mt.mt7xx.MT798ToTransactionConverter;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT762Transaction;
