@@ -121,4 +121,37 @@ class MT784ValidationTest extends MT798ValidationTest {
         validateField(Field31R.NAME, "230101/23");
         validateField(Field31R.NAME, "230101/231301");
     }
+
+    @Test
+    void testValidateField71F() {
+        validateField(Field71F.NAME, RandomStringUtils.randomAlphanumeric(18));
+    }
+
+    @Test
+    void testValidateField37J() {
+        validateField(Field37J.NAME, RandomStringUtils.randomAlphanumeric(15));
+    }
+
+    @Test
+    void testValidateField49Z() {
+        validateField(Field49Z.NAME, generateValue(50, 65));
+        validateField(Field49Z.NAME, generateValue(50, 65));
+    }
+
+    @Test
+    void testValidateField29A() {
+        validateField(Field29A.NAME, generateValue(4, 35));
+        validateField(Field29A.NAME, generateValue(4, 35));
+    }
+
+    @Test
+    void testValidateField29D() {
+        validateField(Field29D.NAME, generateValue(4, 35));
+        validateField(Field29D.NAME, generateValue(4, 35));
+    }
+
+    @Test
+    void testValidateField29P() {
+        validateField(Field29P.NAME, RandomStringUtils.randomAlphanumeric(12));
+    }
 }
