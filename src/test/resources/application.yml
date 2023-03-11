@@ -2,5 +2,6 @@ swift:
   mt:
     validation:
       is-simple-label: true
-      enabled-mt7xx: true
-      enabled-mt9xx: true
+      #enabled-mt7xx: true
+      #enabled-mt9xx: true
+      enabled: true
