@@ -2,9 +2,13 @@ package cn.maiaimei.example.converter;
 
 import cn.maiaimei.example.config.TestConfig;
 import cn.maiaimei.framework.swift.converter.mt.mt7xx.TransactionToMT798Converter;
+import cn.maiaimei.framework.swift.model.FieldValue;
+import cn.maiaimei.framework.swift.model.MultilineCharacter;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Message;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.transaction.MT762Transaction;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.transaction.MT784Transaction;
+import com.prowidesoftware.swift.model.field.Field32B;
+import com.prowidesoftware.swift.model.field.Field40C;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +18,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import java.util.Collections;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
@@ -22,6 +27,28 @@ class TransactionToMT798ConverterTest {
 
     @Autowired
     private TransactionToMT798Converter transactionToMT798Converter;
+
+    @Test
+    void testBuildFieldValue() {
+        // Field50: 4*35x
+        String applicant = MultilineCharacter.builder()
+                .append("Pumpen AG")
+                .append("Postfach 123")
+                .append("60599 Frankfurt / GERMANY")
+                .build();
+        assertEquals("Pumpen AG\r\nPostfach 123\r\n60599 Frankfurt / GERMANY", applicant);
+        // field with component
+        String undertakingAmount = FieldValue.builder(Field32B.class)
+                .component(1, "EUR")
+                .component(2, "50000,")
+                .build();
+        assertEquals("EUR50000,", undertakingAmount);
+        String applicableRules = FieldValue.builder(Field40C.class).field()
+                .setType("ISPR")
+                .setNarrative("test1234")
+                .getValue();
+        assertEquals("ISPR/test1234", applicableRules);
+    }
 
     @Test
     void testConvertMT784TransactionToMT798() {
