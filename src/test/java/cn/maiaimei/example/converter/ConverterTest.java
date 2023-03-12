@@ -4,6 +4,8 @@ import cn.maiaimei.example.BaseTest;
 import cn.maiaimei.example.config.TestConfig;
 import cn.maiaimei.framework.swift.annotation.Tag;
 import cn.maiaimei.framework.swift.converter.mt.mt7xx.MT798ToTransactionConverter;
+import cn.maiaimei.framework.swift.converter.mt.mt7xx.TransactionToMT798Converter;
+import cn.maiaimei.framework.swift.model.BaseMessage;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT762Transaction;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Messages;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Transaction;
@@ -35,6 +37,9 @@ public class ConverterTest extends BaseTest {
 
     @Autowired
     private MT798ToTransactionConverter mt798ToTransactionConverter;
+
+    @Autowired
+    private TransactionToMT798Converter transactionToMT798Converter;
 
     @Test
     void testConvertField40C() {
@@ -71,20 +76,40 @@ public class ConverterTest extends BaseTest {
         System.out.println(objectMapper.writeValueAsString(mt798Transaction));
     }
 
+    @Test
+    void testConvertTransactionToMT798_V3() {
+        // TODO: test transactionToMT798Converter
+        MT762Transaction mt762Transaction = new MT762Transaction();
+        mt762Transaction.setIndexMessage(generateMT762IndexMessage());
+        MT798Messages mt798Messages = transactionToMT798Converter.convert(mt762Transaction);
+        assertNotNull(mt798Messages);
+        System.out.println(mt798Messages.getIndexMessage().message());
+    }
+
     @SneakyThrows
     @Test
-    void testConvertTransactionToMT798() {
-        MT762Transaction.MT762IndexMessage indexMessage = new MT762Transaction.MT762IndexMessage();
-        indexMessage.setTransactionReferenceNumber("BOG456873");
-        indexMessage.setSubMessageType("762");
-        indexMessage.setMessageIndexTotal("1/2");
-        indexMessage.setCustomerReferenceNumber("XZZ888-123");
-        indexMessage.setCustomerBusinessReference("XZZ888");
-        indexMessage.setBankReferenceNumber("ABC66578-123");
-        indexMessage.setBankBusinessReference("ABC66578");
-        indexMessage.setUndertakingNumber("PGFFA0765");
-        indexMessage.setTextPurpose("FINAL");
-        indexMessage.setMessageCreationDateTime("202005111501");
+    void testConvertTransactionToMT798_V2() {
+        BaseMessage baseMessage = generateMT762IndexMessage();
+        MT798 mt798 = new MT798();
+        List<java.lang.reflect.Field> declaredFields = getDeclaredFields(baseMessage.getClass());
+        for (java.lang.reflect.Field declaredField : declaredFields) {
+            declaredField.setAccessible(Boolean.TRUE);
+            Tag tagAnnotation = declaredField.getAnnotation(Tag.class);
+            if (tagAnnotation.tags().length == 0) {
+                Object tagValue = declaredField.get(baseMessage);
+                if (tagValue != null) {
+                    mt798.append(new com.prowidesoftware.swift.model.Tag(tagAnnotation.value(), tagValue.toString()));
+                }
+            }
+            declaredField.setAccessible(Boolean.FALSE);
+        }
+        System.out.println(mt798.message());
+    }
+
+    @SneakyThrows
+    @Test
+    void testConvertTransactionToMT798_V1() {
+        MT762Transaction.MT762IndexMessage indexMessage = generateMT762IndexMessage();
 
         List<Field> fields = new ArrayList<>();
         String classNamePrefix = "com.prowidesoftware.swift.model.field.Field";
@@ -111,6 +136,21 @@ public class ConverterTest extends BaseTest {
         MT798 mt798 = new MT798();
         mt798.append(fields.toArray(new Field[0]));
         System.out.println(mt798.message());
+    }
+
+    private MT762Transaction.MT762IndexMessage generateMT762IndexMessage() {
+        MT762Transaction.MT762IndexMessage indexMessage = new MT762Transaction.MT762IndexMessage();
+        indexMessage.setTransactionReferenceNumber("BOG456873");
+        indexMessage.setSubMessageType("762");
+        indexMessage.setMessageIndexTotal("1/2");
+        indexMessage.setCustomerReferenceNumber("XZZ888-123");
+        indexMessage.setCustomerBusinessReference("XZZ888");
+        indexMessage.setBankReferenceNumber("ABC66578-123");
+        indexMessage.setBankBusinessReference("ABC66578");
+        indexMessage.setUndertakingNumber("PGFFA0765");
+        indexMessage.setTextPurpose("FINAL");
+        indexMessage.setMessageCreationDateTime("202005111501");
+        return indexMessage;
     }
 
     @Test

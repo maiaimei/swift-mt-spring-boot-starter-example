@@ -24,7 +24,7 @@ public class CodeGenerator {
 
     @Test
     void testGeneratePropertiesByMessageValidationConfig() {
-        String beanName = "mt762761ValidationConfig";
+        String beanName = "mt762Config";
         MessageConfig messageConfig = applicationContext.getBean(beanName, MessageConfig.class);
         List<FieldInfo> fields = messageConfig.getFields();
         List<SequenceInfo> sequences = messageConfig.getSequences();
