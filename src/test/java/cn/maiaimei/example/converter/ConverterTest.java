@@ -7,6 +7,8 @@ import cn.maiaimei.framework.swift.converter.mt.mt7xx.MT798ToTransactionConverte
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT762Transaction;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Messages;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Transaction;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prowidesoftware.swift.model.SwiftTagListBlock;
 import com.prowidesoftware.swift.model.field.*;
 import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
@@ -35,19 +37,38 @@ public class ConverterTest extends BaseTest {
     private MT798ToTransactionConverter mt798ToTransactionConverter;
 
     @Test
-    void testConvertMT798ToTransaction() {
-        MT798 indexMessage = readFileAsMT798("mt/mt7xx/MT784_784.txt");
-        List<MT798> detailMessages = Collections.singletonList(readFileAsMT798("mt/mt7xx/MT784_760.txt"));
-        List<MT798> extensionMessages = Arrays.asList(
-                readFileAsMT798("mt/mt7xx/MT784_761_01.txt"),
-                readFileAsMT798("mt/mt7xx/MT784_761_02.txt")
-        );
+    void testConvertField40C() {
+        MT798 indexMessage = new MT798();
+        indexMessage.append(new com.prowidesoftware.swift.model.Tag(Field20.NAME, "xxx"));
+        indexMessage.append(new com.prowidesoftware.swift.model.Tag(Field12.NAME, "784"));
+        MT798 detailMessage = new MT798();
+        detailMessage.append(new com.prowidesoftware.swift.model.Tag(Field20.NAME, "xxx"));
+        detailMessage.append(new com.prowidesoftware.swift.model.Tag(Field12.NAME, "760"));
+        detailMessage.append(new com.prowidesoftware.swift.model.Tag(Field77E.NAME, ""));
+        detailMessage.append(new com.prowidesoftware.swift.model.Tag(Field15B.NAME, ""));
+        detailMessage.append(new com.prowidesoftware.swift.model.Tag(Field40C.NAME, "NONE"));
+        List<MT798> detailMessages = Collections.singletonList(detailMessage);
         MT798Messages mt798Messages = new MT798Messages();
         mt798Messages.setIndexMessage(indexMessage);
         mt798Messages.setDetailMessages(detailMessages);
-        mt798Messages.setExtensionMessages(extensionMessages);
         MT798Transaction mt798Transaction = mt798ToTransactionConverter.convert(mt798Messages);
         assertNotNull(mt798Transaction);
+    }
+
+    @SneakyThrows
+    @Test
+    void testConvertMT798ToTransaction() {
+        MT798 indexMessage = readFileAsMT798("mt/mt7xx/MT784_784.txt");
+        List<MT798> detailMessages = Collections.singletonList(readFileAsMT798("mt/mt7xx/MT784_760.txt"));
+        MT798Messages mt798Messages = new MT798Messages();
+        mt798Messages.setIndexMessage(indexMessage);
+        mt798Messages.setDetailMessages(detailMessages);
+        MT798Transaction mt798Transaction = mt798ToTransactionConverter.convert(mt798Messages);
+        assertNotNull(mt798Transaction);
+        ObjectMapper objectMapper = new ObjectMapper();
+        // 忽略 NULL
+        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
+        System.out.println(objectMapper.writeValueAsString(mt798Transaction));
     }
 
     @SneakyThrows

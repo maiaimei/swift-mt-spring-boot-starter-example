@@ -46,12 +46,22 @@ public class ValidationTest extends BaseTest {
         return mt798;
     }
 
-    protected void validateField(MT798 mt798, String tagName, String invalidValue) {
+    protected void validateField(MT798 mt798, String tagName, String tagValue) {
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
         mt798.append(new Tag(tagName, StringUtils.EMPTY));
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
         mt798.getSwiftMessage().getBlock4().removeTag(tagName);
-        mt798.append(new Tag(tagName, invalidValue));
+        mt798.append(new Tag(tagName, tagValue));
+        assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
+    }
+
+    protected void validateField(MT798 mt798, String sequenceStartTagName, String tagName, String tagValue) {
+        mt798.append(new Tag(sequenceStartTagName, StringUtils.EMPTY));
+        assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
+        mt798.append(new Tag(tagName, StringUtils.EMPTY));
+        assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
+        mt798.getSwiftMessage().getBlock4().removeTag(tagName);
+        mt798.append(new Tag(tagName, tagValue));
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
     }
 
@@ -72,12 +82,17 @@ public class ValidationTest extends BaseTest {
         }
     }
 
-    protected String generateValue(int rowcount, int maxlength) {
-        String str = new Random().nextBoolean() ? RandomStringUtils.random(1) : RandomStringUtils.randomAscii(1);
+    protected String generateValue(int rowCount, int maxLengthExclusive) {
+        String rowValue = RandomStringUtils.randomAlphanumeric(1, maxLengthExclusive)
+                .concat(new Random().nextBoolean() ? RandomStringUtils.random(1) : RandomStringUtils.randomAscii(1))
+                .concat("\r\n");
+        return generateValue(rowCount, rowValue);
+    }
+
+    protected String generateValue(int rowCount, String rowValue) {
         StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < rowcount; i++) {
-            builder.append(RandomStringUtils.randomAlphanumeric(1, maxlength))
-                    .append(str)
+        for (int i = 0; i < rowCount; i++) {
+            builder.append(rowValue)
                     .append("\r\n");
         }
         return builder.toString();

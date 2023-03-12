@@ -7,14 +7,14 @@ import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
-class MT784ValidationTest extends ValidationTest {
+class MT784784ValidationTest extends ValidationTest {
 
     void validateField(String tagName, String invalidValue) {
         validateField(mockMT798("784"), tagName, invalidValue);
     }
 
     @Test
-    void testValidate() {
+    void testValidateMT784() {
         MT798 mt798 = readFileAsMT798("mt/mt7xx/MT784_784.txt");
         ValidationResult result = validationEngine.validate(mt798);
         assertAndPrintResult(result);

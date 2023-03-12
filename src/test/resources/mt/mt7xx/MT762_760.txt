@@ -1,0 +1,78 @@
+{4:
+:20:BOG456874
+:12:760
+:77E:
+:27A:2/2
+:21P:ABC66578-123
+:15A:
+:27:1/1
+:22A:ISCO
+:15B:
+:20:PGFFA0765
+:30:200511
+:22D:DGAR
+:40C:URDG
+:23B:FIXD
+:31E:210108
+:51:Pumpen AG
+Postfach 123
+60599 Frankfurt / GERMANY
+:52A:BOGEDEFFXXX
+:59D:BANGKOK BANK
+BANG RAK DISTRICT
+BANGKOK 10500
+THAILAND
+:32B:EUR70000,
+:77U: In consideration of your issuing your 
+guaranteeas defined herein we hereby give you our 
+irrevocable counter guarantee and undertake
+to pay you any sum or sums not exceeding in total the
+undertaking
+amount as defined in this counter-guarantee on
+presentation of
+your first demand. Such demand shall be supported by
+your written
+statement that you have received a demand for
+payment under your
+guarantee in accordance with its terms and Article 20
+of the
+Uniform Rules for Demand Guarantees, ICC
+publication No. 758.
+:15C:
+:31C:150518
+:22D:DGAR
+:40C:URDG
+:22K:PERF
+:23B:FIXD
+:31E:151231
+:50:Pumpen AG
+Postfach 123
+60599 Frankfurt / GERMANY
+:52A:BKKBTHBK
+:59:Thailand Minerals and Mining.
+Ratchadaphisek 21
+Huai Khwang, Bangkok 10310
+THAILAND
+:32B:EUR70000,
+:45L:We have been informed that Pumpen AG,
+Postfach 123,60599 Frankfurt, Germany, has entered
+into contract No. ABC456
+dated 5th March 2015 with Mining Ltd., Main Road,
+Bangkok,
+Thailand, for the supply and delivery of pumps and
+equipment.
+Furthermore we understand that, under the conditions
+of
+contract, a performance guarantee is required.
+It has been agreed between the Buyer and the Seller,
+that
+the Seller needs to provide a standard Performance
+Guarantee
+for 10 percent of the total contract value, EUR 700000
+valid
+until the 31st December 2015, through the Buyer s
+local bank
+in Thailand, Bangkok Bank.
+:24E:COUR
+:24G:BENE
+-}
