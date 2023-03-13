@@ -7,8 +7,6 @@ import cn.maiaimei.framework.swift.converter.mt.mt7xx.MT798ToTransactionConverte
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Message;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Transaction;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.transaction.MT784Transaction;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.prowidesoftware.swift.model.field.Field32B;
 import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import lombok.SneakyThrows;
@@ -37,7 +35,7 @@ class MT798ToTransactionConverterTest extends BaseTest {
 
     @SneakyThrows
     @Test
-    void testConvertMT798ToTransaction() {
+    void testConvertToMT784Transaction() {
         MT798 indexMessage = readFileAsMT798("mt/mt7xx/MT784_784.txt");
         List<MT798> detailMessages = Collections.singletonList(readFileAsMT798("mt/mt7xx/MT784_760.txt"));
         MT798Message mt798Message = new MT798Message();
@@ -45,14 +43,12 @@ class MT798ToTransactionConverterTest extends BaseTest {
         mt798Message.setDetailMessages(detailMessages);
         MT798Transaction mt798Transaction = mt798ToTransactionConverter.convert(mt798Message);
         assertNotNull(mt798Transaction);
-
-        ObjectMapper objectMapper = new ObjectMapper();
-        // ignore NULL
-        objectMapper.setSerializationInclusion(JsonInclude.Include.NON_DEFAULT);
         System.out.println(objectMapper.writeValueAsString(mt798Transaction));
 
-        List<MT784Transaction.MT784DetailMessage> detailMsgs = mt798Transaction.convert(mt798Transaction.getDetailMessages(), MT784Transaction.MT784DetailMessage.class);
-        MT784Transaction.MT784DetailMessage mt784DetailMessage = detailMsgs.get(0);
+        MT784Transaction.MT784IndexMessage mt784IndexMessage = mt798Transaction.convertToConcreteIndexMessage(MT784Transaction.MT784IndexMessage.class);
+        List<MT784Transaction.MT784DetailMessage> mt784DetailMessages = mt798Transaction.convertToConcreteDetailMessages(MT784Transaction.MT784DetailMessage.class);
+        List<MT784Transaction.MT784ExtensionMessage> mt784ExtensionMessages = mt798Transaction.convertToConcreteExtensionMessages(MT784Transaction.MT784ExtensionMessage.class);
+        MT784Transaction.MT784DetailMessage mt784DetailMessage = mt784DetailMessages.get(0);
         MT784Transaction.MT784DetailSequenceA sequenceA = mt784DetailMessage.getSequenceA();
         MT784Transaction.MT784DetailSequenceB sequenceB = mt784DetailMessage.getSequenceB();
         MT784Transaction.MT784DetailSequenceC sequenceC = mt784DetailMessage.getSequenceC();

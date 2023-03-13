@@ -1,5 +1,6 @@
 package cn.maiaimei.example.converter;
 
+import cn.maiaimei.example.BaseTest;
 import cn.maiaimei.example.config.TestConfig;
 import cn.maiaimei.framework.swift.converter.mt.mt7xx.TransactionToMT798Converter;
 import cn.maiaimei.framework.swift.model.FieldValue;
@@ -9,6 +10,7 @@ import cn.maiaimei.framework.swift.model.mt.mt7xx.transaction.MT762Transaction;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.transaction.MT784Transaction;
 import com.prowidesoftware.swift.model.field.Field32B;
 import com.prowidesoftware.swift.model.field.Field40C;
+import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +25,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestConfig.class, initializers = ConfigDataApplicationContextInitializer.class)
-class TransactionToMT798ConverterTest {
+class TransactionToMT798ConverterTest extends BaseTest {
 
     @Autowired
     private TransactionToMT798Converter transactionToMT798Converter;
@@ -51,7 +53,22 @@ class TransactionToMT798ConverterTest {
     }
 
     @Test
-    void testConvertMT784TransactionToMT798() {
+    void testConvertMT784TransactionToMT798_02() {
+        MT784Transaction transaction = readFileAsObject("mt/mt7xx/MT784Transaction.json", MT784Transaction.class);
+        MT798Message message = transactionToMT798Converter.convert(transaction);
+        assertNotNull(message);
+        assertNotNull(message.getIndexMessage());
+        System.out.println("---------- IndexMessage ----------");
+        System.out.println(message.getIndexMessage().message());
+        assertNotNull(message.getDetailMessages());
+        System.out.println("---------- DetailMessages ----------");
+        for (MT798 detailMessage : message.getDetailMessages()) {
+            System.out.println(detailMessage.message());
+        }
+    }
+
+    @Test
+    void testConvertMT784TransactionToMT798_01() {
         MT784Transaction.MT784DetailMessage detailMessage = new MT784Transaction.MT784DetailMessage();
         detailMessage.setTransactionReferenceNumber("FGH96373");
         detailMessage.setSubMessageType("760");
