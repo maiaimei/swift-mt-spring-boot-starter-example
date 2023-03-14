@@ -34,7 +34,7 @@ class MT798ToTransactionConverterTest extends BaseTest {
 
     @SneakyThrows
     @Test
-    void testConvertToMT784Transaction() {
+    void testMT784Transaction() {
         MT798 indexMessage = readFileAsMT798("mt/mt7xx/MT784_784.txt");
         List<MT798> detailMessages = Collections.singletonList(readFileAsMT798("mt/mt7xx/MT784_760.txt"));
         MT798Message mt798Message = new MT798Message();
@@ -43,8 +43,8 @@ class MT798ToTransactionConverterTest extends BaseTest {
         MT798Transaction mt798Transaction = mt798ToTransactionConverter.convert(mt798Message);
         assertNotNull(mt798Transaction);
         System.out.println(objectMapper.writeValueAsString(mt798Transaction));
-        MT784Transaction mt784Transaction = (MT784Transaction) mt798Transaction;
 
+        MT784Transaction mt784Transaction = (MT784Transaction) mt798Transaction;
         MT784Transaction.MT784IndexMessage mt784IndexMessage = mt784Transaction.getIndexMessage();
         List<MT784Transaction.MT784DetailMessage> mt784DetailMessages = mt784Transaction.getDetailMessages();
         List<MT784Transaction.MT784ExtensionMessage> mt784ExtensionMessages = mt784Transaction.getExtensionMessages();
