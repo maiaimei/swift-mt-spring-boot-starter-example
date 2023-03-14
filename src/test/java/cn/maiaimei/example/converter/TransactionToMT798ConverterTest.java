@@ -55,7 +55,7 @@ class TransactionToMT798ConverterTest extends BaseTest {
     @Test
     void testConvertMT784TransactionToMT798_02() {
         MT784Transaction transaction = readFileAsObject("mt/mt7xx/MT784Transaction.json", MT784Transaction.class);
-        MT798Message message = transactionToMT798Converter.convert(transaction);
+        MT798Message message = transactionToMT798Converter.convert(transaction, MT784Transaction.class);
         assertNotNull(message);
         assertNotNull(message.getIndexMessage());
         System.out.println("---------- IndexMessage ----------");
@@ -94,7 +94,7 @@ class TransactionToMT798ConverterTest extends BaseTest {
         detailMessage.setSequenceB(sequenceB);
         MT784Transaction transaction = new MT784Transaction();
         transaction.setDetailMessages(Collections.singletonList(detailMessage));
-        MT798Message mt798Message = transactionToMT798Converter.convert(transaction);
+        MT798Message mt798Message = transactionToMT798Converter.convert(transaction, MT784Transaction.class);
         assertNotNull(mt798Message);
         System.out.println(mt798Message.getDetailMessages().get(0).message());
     }
@@ -115,7 +115,7 @@ class TransactionToMT798ConverterTest extends BaseTest {
 
         MT762Transaction mt762Transaction = new MT762Transaction();
         mt762Transaction.setIndexMessage(indexMessage);
-        MT798Message mt798Message = transactionToMT798Converter.convert(mt762Transaction);
+        MT798Message mt798Message = transactionToMT798Converter.convert(mt762Transaction, MT762Transaction.class);
         assertNotNull(mt798Message);
         System.out.println(mt798Message.getIndexMessage().message());
     }

@@ -20,8 +20,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import java.util.Collections;
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(SpringExtension.class)
 @ContextConfiguration(classes = TestConfig.class, initializers = ConfigDataApplicationContextInitializer.class)
@@ -44,14 +43,21 @@ class MT798ToTransactionConverterTest extends BaseTest {
         MT798Transaction mt798Transaction = mt798ToTransactionConverter.convert(mt798Message);
         assertNotNull(mt798Transaction);
         System.out.println(objectMapper.writeValueAsString(mt798Transaction));
+        MT784Transaction mt784Transaction = (MT784Transaction) mt798Transaction;
 
-        MT784Transaction.MT784IndexMessage mt784IndexMessage = mt798Transaction.convertToConcreteIndexMessage(MT784Transaction.MT784IndexMessage.class);
-        List<MT784Transaction.MT784DetailMessage> mt784DetailMessages = mt798Transaction.convertToConcreteDetailMessages(MT784Transaction.MT784DetailMessage.class);
-        List<MT784Transaction.MT784ExtensionMessage> mt784ExtensionMessages = mt798Transaction.convertToConcreteExtensionMessages(MT784Transaction.MT784ExtensionMessage.class);
+        MT784Transaction.MT784IndexMessage mt784IndexMessage = mt784Transaction.getIndexMessage();
+        List<MT784Transaction.MT784DetailMessage> mt784DetailMessages = mt784Transaction.getDetailMessages();
+        List<MT784Transaction.MT784ExtensionMessage> mt784ExtensionMessages = mt784Transaction.getExtensionMessages();
+        assertNotNull(mt784IndexMessage);
+        assertNotNull(mt784DetailMessages);
+        assertNull(mt784ExtensionMessages);
         MT784Transaction.MT784DetailMessage mt784DetailMessage = mt784DetailMessages.get(0);
         MT784Transaction.MT784DetailSequenceA sequenceA = mt784DetailMessage.getSequenceA();
         MT784Transaction.MT784DetailSequenceB sequenceB = mt784DetailMessage.getSequenceB();
         MT784Transaction.MT784DetailSequenceC sequenceC = mt784DetailMessage.getSequenceC();
+        assertNotNull(sequenceA);
+        assertNotNull(sequenceB);
+        assertNotNull(sequenceC);
         Field32B field32B = stringToFieldConverter.convert(sequenceB.getUndertakingAmount(), Field32B.class);
         assertEquals("EUR", field32B.getCurrency());
         assertEquals("50000,", field32B.getAmount());
