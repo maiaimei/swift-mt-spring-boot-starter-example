@@ -13,7 +13,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 
 public class BaseTest {
-    protected static final ObjectMapper objectMapper = new ObjectMapper();
+    private static final ObjectMapper objectMapper = new ObjectMapper();
 
     static {
         // 序列化的时候忽略NULL
@@ -43,6 +43,11 @@ public class BaseTest {
     protected <T> T readFileAsObject(String path, TypeReference<T> valueTypeRef) {
         String json = readFileAsString(path);
         return objectMapper.readValue(json, valueTypeRef);
+    }
+
+    @SneakyThrows
+    protected String writeValueAsString(Object value) {
+        return objectMapper.writeValueAsString(value);
     }
 
 }
