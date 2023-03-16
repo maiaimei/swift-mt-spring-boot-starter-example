@@ -1,5 +1,0 @@
-swift:
-  mt:
-    validation:
-      is-simple-label: true
-      enabled: true

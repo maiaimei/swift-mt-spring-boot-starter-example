@@ -1,6 +1,6 @@
 package cn.maiaimei.example.validation.mt7xx;
 
-import cn.maiaimei.example.validation.ValidationTest;
+import cn.maiaimei.example.BaseContextTest;
 import cn.maiaimei.framework.swift.validation.ValidationResult;
 import com.prowidesoftware.swift.model.Tag;
 import com.prowidesoftware.swift.model.field.Field15A;
@@ -8,7 +8,7 @@ import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.Test;
 
-public class MT784760ValidationTest extends ValidationTest {
+public class MT784760ValidationTest extends BaseContextTest {
     @Test
     void testValidateMT760() {
         MT798 mt798 = readFileAsMT798("mt/mt7xx/MT784_760.txt");

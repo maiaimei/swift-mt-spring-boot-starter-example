@@ -1,7 +1,11 @@
-package cn.maiaimei.example.validation;
+package cn.maiaimei.example;
 
-import cn.maiaimei.example.BaseTest;
-import cn.maiaimei.example.config.ValidationTestConfig;
+import cn.maiaimei.example.config.TestConfig;
+import cn.maiaimei.framework.swift.converter.StringToFieldConverter;
+import cn.maiaimei.framework.swift.converter.mt.mt7xx.MT798ToTransactionConverter;
+import cn.maiaimei.framework.swift.converter.mt.mt7xx.TransactionToMT798Converter;
+import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Message;
+import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Transaction;
 import cn.maiaimei.framework.swift.validation.ValidationResult;
 import cn.maiaimei.framework.swift.validation.engine.ValidationEngine;
 import com.prowidesoftware.swift.model.Tag;
@@ -32,11 +36,20 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
  */
 @Slf4j
 @ExtendWith({SpringExtension.class})
-@ContextConfiguration(classes = ValidationTestConfig.class, initializers = ConfigDataApplicationContextInitializer.class)
-public class ValidationTest extends BaseTest {
+@ContextConfiguration(classes = TestConfig.class, initializers = ConfigDataApplicationContextInitializer.class)
+public class BaseContextTest extends BaseTest {
 
     @Autowired
     protected ValidationEngine validationEngine;
+
+    @Autowired
+    protected StringToFieldConverter stringToFieldConverter;
+
+    @Autowired
+    protected MT798ToTransactionConverter mt798ToTransactionConverter;
+
+    @Autowired
+    protected TransactionToMT798Converter transactionToMT798Converter;
 
     protected MT798 mockMT798(String subMessageType) {
         MT798 mt798 = new MT798();
@@ -96,5 +109,43 @@ public class ValidationTest extends BaseTest {
                     .append("\r\n");
         }
         return builder.toString();
+    }
+
+    protected <T extends MT798Transaction> void convert(MT798 indexMessage1, List<MT798> detailMessages1, List<MT798> extensionMessages1, Class<T> clazz) {
+        final MT798Message mt798Message1 = new MT798Message();
+        mt798Message1.setIndexMessage(indexMessage1);
+        mt798Message1.setDetailMessages(detailMessages1);
+        mt798Message1.setExtensionMessages(extensionMessages1);
+        final MT798Transaction transaction = mt798ToTransactionConverter.convert(mt798Message1);
+        System.out.println("===> MT798 convert to transaction begin");
+        System.out.println(writeValueAsString(transaction));
+        System.out.println("<=== MT798 convert to transaction end");
+        final MT798Message mt798Message2 = transactionToMT798Converter.convert((T) transaction, clazz);
+        final MT798 indexMessage2 = mt798Message2.getIndexMessage();
+        final List<MT798> detailMessages2 = mt798Message2.getDetailMessages();
+        final List<MT798> extensionMessages2 = mt798Message2.getExtensionMessages();
+        System.out.println("===> transaction convert to MT798 indexMessage begin");
+        System.out.println(indexMessage2.message());
+        System.out.println("===> transaction convert to MT798 indexMessage end");
+        if (!CollectionUtils.isEmpty(detailMessages2)) {
+            System.out.println("===> transaction convert to MT798 detailMessage begin");
+            for (int i = 0; i < detailMessages2.size(); i++) {
+                System.out.println(detailMessages2.get(i).message());
+                if (i != detailMessages2.size() - 1) {
+                    System.out.println("------------------------------------------------------------");
+                }
+            }
+            System.out.println("===> transaction convert to MT798 detailMessage end");
+        }
+        if (!CollectionUtils.isEmpty(extensionMessages2)) {
+            System.out.println("===> transaction convert to MT798 extensionMessage begin");
+            for (int i = 0; i < extensionMessages2.size(); i++) {
+                System.out.println(extensionMessages2.get(i).message());
+                if (i != extensionMessages2.size() - 1) {
+                    System.out.println("------------------------------------------------------------");
+                }
+            }
+            System.out.println("===> transaction convert to MT798 extensionMessage end");
+        }
     }
 }

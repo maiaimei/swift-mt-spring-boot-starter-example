@@ -1,6 +1,6 @@
 package cn.maiaimei.example.validation.mt7xx;
 
-import cn.maiaimei.example.validation.ValidationTest;
+import cn.maiaimei.example.BaseContextTest;
 import com.prowidesoftware.swift.model.field.Field12;
 import com.prowidesoftware.swift.model.field.Field20;
 import com.prowidesoftware.swift.model.field.Field77E;
@@ -8,7 +8,7 @@ import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.jupiter.api.Test;
 
-class MT798Section1ValidationTest extends ValidationTest {
+class MT798Section1ValidationTest extends BaseContextTest {
 
     @Test
     void testValidateField20IsAbsent() {

@@ -1,11 +1,11 @@
 package cn.maiaimei.example.validation.mt7xx;
 
-import cn.maiaimei.example.validation.ValidationTest;
+import cn.maiaimei.example.BaseContextTest;
 import cn.maiaimei.framework.swift.validation.ValidationResult;
 import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import org.junit.jupiter.api.Test;
 
-public class MT762ValidationTest extends ValidationTest {
+public class MT762ValidationTest extends BaseContextTest {
     @Test
     void validateMT762() {
         MT798 mt798 = readFileAsMT798("mt/mt7xx/MT762_762.txt");
