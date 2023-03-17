@@ -4,7 +4,7 @@ import cn.maiaimei.example.config.TestConfig;
 import cn.maiaimei.framework.swift.converter.StringToFieldConverter;
 import cn.maiaimei.framework.swift.converter.mt.mt7xx.MT798ToTransactionConverter;
 import cn.maiaimei.framework.swift.converter.mt.mt7xx.TransactionToMT798Converter;
-import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Message;
+import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Packets;
 import cn.maiaimei.framework.swift.model.mt.mt7xx.MT798Transaction;
 import cn.maiaimei.framework.swift.validation.ValidationResult;
 import cn.maiaimei.framework.swift.validation.engine.ValidationEngine;
@@ -14,7 +14,6 @@ import com.prowidesoftware.swift.model.field.Field20;
 import com.prowidesoftware.swift.model.field.Field77E;
 import com.prowidesoftware.swift.model.mt.mt7xx.MT798;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +23,6 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
-import java.util.Random;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
@@ -59,21 +57,54 @@ public class BaseContextTest extends BaseTest {
         return mt798;
     }
 
-    protected void validateField(MT798 mt798, String tagName, String tagValue) {
+    protected void validate(String path) {
+        final String message = readFileAsString(path);
+        final MT798 mt798 = new MT798(message);
+        final ValidationResult result = validationEngine.validate(mt798);
+        assertAndPrintResult(result);
+    }
+
+    protected void validate(String path, String indexMessageType) {
+        final String message = readFileAsString(path);
+        final MT798 mt798 = new MT798(message);
+        final ValidationResult result = validationEngine.validate(mt798, indexMessageType, indexMessageType);
+        assertAndPrintResult(result);
+    }
+
+    protected void validate(String path, String indexMessageType, String subMessageType) {
+        final String message = readFileAsString(path);
+        final MT798 mt798 = new MT798(message);
+        final ValidationResult result = validationEngine.validate(mt798, indexMessageType, subMessageType);
+        assertAndPrintResult(result);
+    }
+
+    protected void validateFieldWhenAbsent(MT798 mt798, String tagName) {
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
+    }
+
+    protected void validateFieldWhenBlank(MT798 mt798, String tagName) {
         mt798.append(new Tag(tagName, StringUtils.EMPTY));
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
-        mt798.getSwiftMessage().getBlock4().removeTag(tagName);
+    }
+
+    protected void validateField(MT798 mt798, String tagName, String tagValue) {
         mt798.append(new Tag(tagName, tagValue));
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
     }
 
-    protected void validateField(MT798 mt798, String sequenceStartTagName, String tagName, String tagValue) {
-        mt798.append(new Tag(sequenceStartTagName, StringUtils.EMPTY));
+    protected void validateFieldWhenAbsent(MT798 mt798, String startTagName, String tagName) {
+        mt798.append(new Tag(startTagName, StringUtils.EMPTY));
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
+    }
+
+    protected void validateFieldWhenBlank(MT798 mt798, String startTagName, String tagName) {
+        mt798.append(new Tag(startTagName, StringUtils.EMPTY));
         mt798.append(new Tag(tagName, StringUtils.EMPTY));
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
-        mt798.getSwiftMessage().getBlock4().removeTag(tagName);
+    }
+
+    protected void validateField(MT798 mt798, String startTagName, String tagName, String tagValue) {
+        mt798.append(new Tag(startTagName, StringUtils.EMPTY));
         mt798.append(new Tag(tagName, tagValue));
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
     }
@@ -95,57 +126,41 @@ public class BaseContextTest extends BaseTest {
         }
     }
 
-    protected String generateValue(int rowCount, int maxLengthExclusive) {
-        String rowValue = RandomStringUtils.randomAlphanumeric(1, maxLengthExclusive)
-                .concat(new Random().nextBoolean() ? RandomStringUtils.random(1) : RandomStringUtils.randomAscii(1))
-                .concat("\r\n");
-        return generateValue(rowCount, rowValue);
-    }
-
-    protected String generateValue(int rowCount, String rowValue) {
-        StringBuilder builder = new StringBuilder();
-        for (int i = 0; i < rowCount; i++) {
-            builder.append(rowValue)
-                    .append("\r\n");
-        }
-        return builder.toString();
-    }
-
-    protected <T extends MT798Transaction> void convert(MT798 indexMessage1, List<MT798> detailMessages1, List<MT798> extensionMessages1, Class<T> clazz) {
-        final MT798Message mt798Message1 = new MT798Message();
-        mt798Message1.setIndexMessage(indexMessage1);
-        mt798Message1.setDetailMessages(detailMessages1);
-        mt798Message1.setExtensionMessages(extensionMessages1);
-        final MT798Transaction transaction = mt798ToTransactionConverter.convert(mt798Message1);
+    /**
+     * <p>first convert MT798 packets to transaction</p>
+     * <p>then convert transaction to MT798 packets</p>
+     */
+    protected <T extends MT798Transaction> void doBidirectionalConversion(MT798 indexMessage, List<MT798> detailMessages, List<MT798> extensionMessages, Class<T> clazz) {
+        final MT798Packets sourceMT798Packets = new MT798Packets();
+        sourceMT798Packets.setIndexMessage(indexMessage);
+        sourceMT798Packets.setDetailMessages(detailMessages);
+        sourceMT798Packets.setExtensionMessages(extensionMessages);
+        final MT798Transaction transaction = mt798ToTransactionConverter.convert(sourceMT798Packets);
+        final MT798Packets convertedMT798Packets = transactionToMT798Converter.convert((T) transaction, clazz);
         System.out.println("===> MT798 convert to transaction begin");
         System.out.println(writeValueAsString(transaction));
         System.out.println("<=== MT798 convert to transaction end");
-        final MT798Message mt798Message2 = transactionToMT798Converter.convert((T) transaction, clazz);
-        final MT798 indexMessage2 = mt798Message2.getIndexMessage();
-        final List<MT798> detailMessages2 = mt798Message2.getDetailMessages();
-        final List<MT798> extensionMessages2 = mt798Message2.getExtensionMessages();
+        print(convertedMT798Packets);
+    }
+
+    protected void print(MT798Packets convertedMT798Packets) {
         System.out.println("===> transaction convert to MT798 indexMessage begin");
-        System.out.println(indexMessage2.message());
+        System.out.println(convertedMT798Packets.getIndexMessage().message());
         System.out.println("===> transaction convert to MT798 indexMessage end");
-        if (!CollectionUtils.isEmpty(detailMessages2)) {
-            System.out.println("===> transaction convert to MT798 detailMessage begin");
-            for (int i = 0; i < detailMessages2.size(); i++) {
-                System.out.println(detailMessages2.get(i).message());
-                if (i != detailMessages2.size() - 1) {
+        print(convertedMT798Packets.getDetailMessages(), "detailMessage");
+        print(convertedMT798Packets.getExtensionMessages(), "extensionMessage");
+    }
+
+    private void print(List<MT798> mts, String type) {
+        if (!CollectionUtils.isEmpty(mts)) {
+            System.out.println("===> transaction convert to MT798 " + type + " begin");
+            for (int i = 0; i < mts.size(); i++) {
+                System.out.println(mts.get(i).message());
+                if (i != mts.size() - 1) {
                     System.out.println("------------------------------------------------------------");
                 }
             }
-            System.out.println("===> transaction convert to MT798 detailMessage end");
-        }
-        if (!CollectionUtils.isEmpty(extensionMessages2)) {
-            System.out.println("===> transaction convert to MT798 extensionMessage begin");
-            for (int i = 0; i < extensionMessages2.size(); i++) {
-                System.out.println(extensionMessages2.get(i).message());
-                if (i != extensionMessages2.size() - 1) {
-                    System.out.println("------------------------------------------------------------");
-                }
-            }
-            System.out.println("===> transaction convert to MT798 extensionMessage end");
+            System.out.println("===> transaction convert to MT798 " + type + " end");
         }
     }
 }
