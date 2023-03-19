@@ -8,5 +8,4 @@ import org.springframework.context.annotation.PropertySource;
 @Configuration
 @Import(SwiftAutoConfiguration.class)
 @PropertySource("classpath:application.yml")
-public class TestConfig {
-}
+public class TestConfig {}

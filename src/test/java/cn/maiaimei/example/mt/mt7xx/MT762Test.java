@@ -24,10 +24,10 @@ public class MT762Test extends BaseContextTest {
 
     @Test
     void testConvert() {
-        doBidirectionalConversion(new MT798(readFileAsString(MT762_PATH)),
+        doBidirectionalConversion(
+                new MT798(readFileAsString(MT762_PATH)),
                 Collections.singletonList(new MT798(readFileAsString(MT760_PATH))),
                 Collections.emptyList(),
                 MT762Transaction.class);
     }
-
 }

@@ -22,5 +22,4 @@ public class ConverterTest extends BaseContextTest {
         assertEquals("EUR", field32B.getCurrency());
         assertEquals("50000,", field32B.getAmount());
     }
-    
 }

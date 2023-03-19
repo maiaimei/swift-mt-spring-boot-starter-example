@@ -29,25 +29,21 @@ import java.util.stream.Collectors;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-/**
- * ConfigDataApplicationContextInitializer 可在测试类中加载yml
- */
+/** ConfigDataApplicationContextInitializer 可在测试类中加载yml */
 @Slf4j
 @ExtendWith({SpringExtension.class})
-@ContextConfiguration(classes = TestConfig.class, initializers = ConfigDataApplicationContextInitializer.class)
+@ContextConfiguration(
+        classes = TestConfig.class,
+        initializers = ConfigDataApplicationContextInitializer.class)
 public class BaseContextTest extends BaseTest {
 
-    @Autowired
-    protected ValidationEngine validationEngine;
+    @Autowired protected ValidationEngine validationEngine;
 
-    @Autowired
-    protected StringToFieldConverter stringToFieldConverter;
+    @Autowired protected StringToFieldConverter stringToFieldConverter;
 
-    @Autowired
-    protected MT798ToTransactionConverter mt798ToTransactionConverter;
+    @Autowired protected MT798ToTransactionConverter mt798ToTransactionConverter;
 
-    @Autowired
-    protected TransactionToMT798Converter transactionToMT798Converter;
+    @Autowired protected TransactionToMT798Converter transactionToMT798Converter;
 
     protected MT798 mockMT798(String subMessageType) {
         MT798 mt798 = new MT798();
@@ -67,14 +63,16 @@ public class BaseContextTest extends BaseTest {
     protected void validate(String path, String indexMessageType) {
         final String message = readFileAsString(path);
         final MT798 mt798 = new MT798(message);
-        final ValidationResult result = validationEngine.validate(mt798, indexMessageType, indexMessageType);
+        final ValidationResult result =
+                validationEngine.validate(mt798, indexMessageType, indexMessageType);
         assertAndPrintResult(result);
     }
 
     protected void validate(String path, String indexMessageType, String subMessageType) {
         final String message = readFileAsString(path);
         final MT798 mt798 = new MT798(message);
-        final ValidationResult result = validationEngine.validate(mt798, indexMessageType, subMessageType);
+        final ValidationResult result =
+                validationEngine.validate(mt798, indexMessageType, subMessageType);
         assertAndPrintResult(result);
     }
 
@@ -103,7 +101,8 @@ public class BaseContextTest extends BaseTest {
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
     }
 
-    protected void validateField(MT798 mt798, String startTagName, String tagName, String tagValue) {
+    protected void validateField(
+            MT798 mt798, String startTagName, String tagName, String tagValue) {
         mt798.append(new Tag(startTagName, StringUtils.EMPTY));
         mt798.append(new Tag(tagName, tagValue));
         assertAndPrintResult(validationEngine.validate(mt798), t -> t.startsWith(tagName));
@@ -127,16 +126,23 @@ public class BaseContextTest extends BaseTest {
     }
 
     /**
-     * <p>first convert MT798 packets to transaction</p>
-     * <p>then convert transaction to MT798 packets</p>
+     * first convert MT798 packets to transaction
+     *
+     * <p>then convert transaction to MT798 packets
      */
-    protected <T extends MT798Transaction> void doBidirectionalConversion(MT798 indexMessage, List<MT798> detailMessages, List<MT798> extensionMessages, Class<T> clazz) {
+    protected <T extends MT798Transaction> void doBidirectionalConversion(
+            MT798 indexMessage,
+            List<MT798> detailMessages,
+            List<MT798> extensionMessages,
+            Class<T> clazz) {
         final MT798Packets sourceMT798Packets = new MT798Packets();
         sourceMT798Packets.setIndexMessage(indexMessage);
         sourceMT798Packets.setDetailMessages(detailMessages);
         sourceMT798Packets.setExtensionMessages(extensionMessages);
-        final MT798Transaction transaction = mt798ToTransactionConverter.convert(sourceMT798Packets);
-        final MT798Packets convertedMT798Packets = transactionToMT798Converter.convert((T) transaction, clazz);
+        final MT798Transaction transaction =
+                mt798ToTransactionConverter.convert(sourceMT798Packets);
+        final MT798Packets convertedMT798Packets =
+                transactionToMT798Converter.convert((T) transaction, clazz);
         System.out.println("===> MT798 convert to transaction begin");
         System.out.println(writeValueAsString(transaction));
         System.out.println("<=== MT798 convert to transaction end");
@@ -157,7 +163,8 @@ public class BaseContextTest extends BaseTest {
             for (int i = 0; i < mts.size(); i++) {
                 System.out.println(mts.get(i).message());
                 if (i != mts.size() - 1) {
-                    System.out.println("------------------------------------------------------------");
+                    System.out.println(
+                            "------------------------------------------------------------");
                 }
             }
             System.out.println("===> transaction convert to MT798 " + type + " end");

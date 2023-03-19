@@ -11,9 +11,7 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-/**
- * https://dev.prowidesoftware.com/SRU2022/open-source/core/mt-modify/#rje-readerwriter_1
- */
+/** https://dev.prowidesoftware.com/SRU2022/open-source/core/mt-modify/#rje-readerwriter_1 */
 class MTContentModificationTest extends BaseTest {
     @Test
     void InsertNewFields01() {
@@ -24,12 +22,11 @@ class MTContentModificationTest extends BaseTest {
         SwiftBlock4 b4 = mt.getSwiftMessage().getBlock4();
         assertNull(b4.getTagValue("21"));
         /**
-         * The addTag at index adds a tag at the specified position in this tag list, 
-         * and shifts the element currently at that position (if any) 
-         * and any subsequent elements to the right (adds one to their indices).
+         * The addTag at index adds a tag at the specified position in this tag list, and shifts the
+         * element currently at that position (if any) and any subsequent elements to the right
+         * (adds one to their indices).
          *
-         * tag list before: 20, 23B and 71A
-         * tag list after: 20, 21, 23B and 71A
+         * <p>tag list before: 20, 23B and 71A tag list after: 20, 21, 23B and 71A
          */
         b4.addTag(2, (new Tag("21:RELREF")));
         assertNotNull(b4.getTagValue("21"));
@@ -43,10 +40,7 @@ class MTContentModificationTest extends BaseTest {
         mt.append(new Field71A("SHA"));
         SwiftBlock4 b4 = mt.getSwiftMessage().getBlock4();
         assertNull(b4.getTagValue("21"));
-        /**
-         * tag list before: 20, 23B and 71A
-         * tag list after: 20, 21 and 71A
-         */
+        /** tag list before: 20, 23B and 71A tag list after: 20, 21 and 71A */
         b4.setTag(1, (new Tag("21:RELREF")));
         assertNotNull(b4.getTagValue("21"));
     }
@@ -87,5 +81,4 @@ class MTContentModificationTest extends BaseTest {
         String message = readFileAsString("mt/mt1xx/MT103.txt");
         return MT103.parse(message);
     }
-
 }

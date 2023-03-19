@@ -18,10 +18,10 @@ public class MT719Test extends BaseContextTest {
 
     @Test
     void testConvert() {
-        doBidirectionalConversion(new MT798(readFileAsString(path)),
+        doBidirectionalConversion(
+                new MT798(readFileAsString(path)),
                 Collections.emptyList(),
                 Collections.emptyList(),
                 MT719Transaction.class);
     }
-
 }

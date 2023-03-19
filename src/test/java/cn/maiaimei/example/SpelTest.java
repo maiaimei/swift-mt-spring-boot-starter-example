@@ -18,5 +18,4 @@ public class SpelTest {
         String value = (String) exp.getValue();
         log.info(value);
     }
-
 }

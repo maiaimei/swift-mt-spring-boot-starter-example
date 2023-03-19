@@ -51,5 +51,4 @@ public class BaseTest {
     protected String writeValueAsString(Object value) {
         return objectMapper.writeValueAsString(value);
     }
-
 }
