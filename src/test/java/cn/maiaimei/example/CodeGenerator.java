@@ -17,21 +17,23 @@ import org.springframework.util.CollectionUtils;
 import java.util.List;
 
 @ExtendWith(SpringExtension.class)
-@ContextConfiguration(classes = TestConfig.class, initializers = ConfigDataApplicationContextInitializer.class)
+@ContextConfiguration(
+        classes = TestConfig.class,
+        initializers = ConfigDataApplicationContextInitializer.class)
 public class CodeGenerator {
-    @Autowired
-    private ApplicationContext applicationContext;
+    @Autowired private ApplicationContext applicationContext;
 
     @Test
     void testGeneratePropertiesByMessageValidationConfig() {
-    String beanName = "mt726Config";
+        String beanName = "mt777765Config";
         MessageConfig messageConfig = applicationContext.getBean(beanName, MessageConfig.class);
         List<FieldInfo> fields = messageConfig.getFields();
         List<SequenceInfo> sequences = messageConfig.getSequences();
         generateProperty(fields);
         if (!CollectionUtils.isEmpty(sequences)) {
             for (SequenceInfo sequenceInfo : sequences) {
-                System.out.println("--------------- " + sequenceInfo.getName() + " ---------------");
+                System.out.println(
+                        "--------------- " + sequenceInfo.getName() + " ---------------");
                 generateProperty(sequenceInfo.getFields());
             }
         }
